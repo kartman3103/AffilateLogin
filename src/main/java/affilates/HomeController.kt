@@ -1,5 +1,6 @@
 package affilates
 
+import affilates.format.ResponseFormatter
 import affilates.login.AffilateProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -11,11 +12,14 @@ open class HomeController {
     @Autowired
     private lateinit var affilateProvider : AffilateProvider
 
+    @Autowired
+    private lateinit var responseFormatter : ResponseFormatter
+
     @RequestMapping(value = "/")
     @ResponseBody
     open fun home() : String
     {
-        return affilateProvider.getPage()
-                .returnContent().asString()
+        val response = affilateProvider.getPage().returnContent()
+        return responseFormatter.formatMainPage(response.asString())
     }
 }
