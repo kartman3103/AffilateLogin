@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-open class AffilateHttpManager {
+open class AffilateProvider {
     @Autowired
     private lateinit var remoteConfig : RemoteConfig
 

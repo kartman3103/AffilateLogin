@@ -1,6 +1,6 @@
 package affilates
 
-import affilates.login.AffilateHttpManager
+import affilates.login.AffilateProvider
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,7 +14,7 @@ import java.nio.charset.Charset
 @SpringBootTest(classes = arrayOf(Application::class))
 open class LoginTest {
     @Autowired
-    private lateinit var affilateHttpManager : AffilateHttpManager
+    private lateinit var affilateHttpManager : AffilateProvider
 
     @Test
     fun loginTest() {
