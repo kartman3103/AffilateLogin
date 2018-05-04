@@ -10,17 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-open class LoginManager {
+open class AffilateHttpManager {
     @Autowired
     private lateinit var remoteConfig : RemoteConfig
 
-    fun login() : Response {
+    fun getPage() : Response {
         val cookies = Request.Post(remoteConfig.url).execute()
                 .returnResponse()
                 .getHeaders(remoteConfig.cookieHeaderName)
 
         loginWithFormData(cookies)
-        return loginInternal(cookies)
+        return getPageWithCookies(cookies)
     }
 
     private fun loginWithFormData(cookies : Array<Header>) : Response {
@@ -30,7 +30,7 @@ open class LoginManager {
                 .execute()
     }
 
-    private fun loginInternal(cookies : Array<Header>) : Response {
+    private fun getPageWithCookies(cookies : Array<Header>) : Response {
         return Request.Get(remoteConfig.url)
                 .setHeaders(*cookies)
                 .execute()

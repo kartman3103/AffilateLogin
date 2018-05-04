@@ -1,6 +1,6 @@
 package affilates
 
-import affilates.login.LoginManager
+import affilates.login.AffilateHttpManager
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,11 +14,11 @@ import java.nio.charset.Charset
 @SpringBootTest(classes = arrayOf(Application::class))
 open class LoginTest {
     @Autowired
-    private lateinit var loginManager : LoginManager
+    private lateinit var affilateHttpManager : AffilateHttpManager
 
     @Test
     fun loginTest() {
-        val result = loginManager.login()
+        val result = affilateHttpManager.getPage()
 
         val response = result.returnResponse()
         Assert.assertTrue(response.statusLine.statusCode == 200)
