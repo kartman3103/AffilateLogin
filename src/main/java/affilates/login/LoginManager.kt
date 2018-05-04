@@ -1,12 +1,11 @@
 package affilates.login
 
 import affilates.config.RemoteConfig
-import org.apache.http.HttpResponse
-import org.apache.http.auth.AuthScope
-import org.apache.http.auth.UsernamePasswordCredentials
-import org.apache.http.client.methods.HttpPost
-import org.apache.http.impl.client.BasicCredentialsProvider
-import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.http.Header
+import org.apache.http.NameValuePair
+import org.apache.http.client.fluent.Form
+import org.apache.http.client.fluent.Request
+import org.apache.http.client.fluent.Response
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -15,17 +14,32 @@ open class LoginManager {
     @Autowired
     private lateinit var remoteConfig : RemoteConfig
 
-    fun login() : HttpResponse {
-        val credentialsProvider = BasicCredentialsProvider()
-        val credentials = UsernamePasswordCredentials(
-                remoteConfig.login, remoteConfig.password)
+    fun login() : Response {
+        val cookies = Request.Post(remoteConfig.url).execute()
+                .returnResponse()
+                .getHeaders(remoteConfig.cookieHeaderName)
 
-        credentialsProvider.setCredentials(AuthScope.ANY, credentials)
+        loginWithFormData(cookies)
+        return loginInternal(cookies)
+    }
 
-        val httpClient = HttpClientBuilder.create()
-                .setDefaultCredentialsProvider(credentialsProvider)
+    private fun loginWithFormData(cookies : Array<Header>) : Response {
+        return Request.Post(remoteConfig.url)
+                .setHeaders(*cookies)
+                .bodyForm(getFormData())
+                .execute()
+    }
+
+    private fun loginInternal(cookies : Array<Header>) : Response {
+        return Request.Get(remoteConfig.url)
+                .setHeaders(*cookies)
+                .execute()
+    }
+
+    private fun getFormData() : List<NameValuePair> {
+        return Form.form()
+                .add("username", remoteConfig.login)
+                .add("password", remoteConfig.password)
                 .build()
-
-        return httpClient.execute(HttpPost(remoteConfig.url))
     }
 }

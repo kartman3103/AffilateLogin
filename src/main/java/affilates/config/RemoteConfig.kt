@@ -13,4 +13,6 @@ open class RemoteConfig {
     var login : String = ""
 
     var password : String = ""
+
+    var cookieHeaderName : String = ""
 }
